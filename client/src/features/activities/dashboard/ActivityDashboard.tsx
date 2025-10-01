@@ -1,44 +1,21 @@
-import { Grid } from "@mui/material";
+import { CircularProgress, Grid } from "@mui/material";
 import ActivityList from "./ActivityList";
-import ActivityDetail from "../details/ActivityDetail";
-import ActivityForm from "../form/ActivityForm";
+import { useActivities } from "../../../lib/hooks/useActivities";
 
-type Props = {
-  activities: Activity[];
-  selectActivity: (id: string) => void;
-  cancelSelectActivity: () => void;
-  selectedActivity: Activity | undefined;
-  openForm: (id?: string) => void;
-  closeForm: () => void;
-  editMode: boolean;
-}
+export default function ActivityDashboard() {
+  const { activities, isPending} = useActivities();
 
-export default function ActivityDashboard({ 
-  activities, 
-  selectActivity, 
-  cancelSelectActivity, 
-  selectedActivity, 
-  openForm, 
-  closeForm, 
-  editMode,
-}: Props) {
+  if (!activities || isPending) return <CircularProgress />;
+
   return (
     <Grid container spacing={3}>
       <Grid size={7}>
-        <ActivityList activities={activities} selectActivity={selectActivity} />
+        <ActivityList />
       </Grid>
 
       <Grid size={5}>
-        {selectedActivity && !editMode && 
-          <ActivityDetail 
-            selectedActivity={selectedActivity}
-            cancelSelectActivity={cancelSelectActivity} 
-            openForm={openForm}
-          />
-        }
-        {editMode && <ActivityForm closeForm={closeForm} activity={selectedActivity} />}
+        Activity filters go here
       </Grid>
-
     </Grid>
   )
 }
