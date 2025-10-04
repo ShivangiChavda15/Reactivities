@@ -1,11 +1,13 @@
-import { Box, CircularProgress } from "@mui/material";
+import { Box, CircularProgress, Typography } from "@mui/material";
 import ActivityCard from "./ActivityCard";
 import { useActivities } from "../../../lib/hooks/useActivities";
 
 export default function ActivityList() {
-  const { activities, isPending} = useActivities();
-  
-  if (!activities || isPending) return <CircularProgress />;
+  const { activities, isLoading } = useActivities();
+
+  if (isLoading) return <CircularProgress />;
+
+  if (!activities) return <Typography>No activities found</Typography>
 
   return (
     <Box sx={{ display: 'flex', flexDirection: 'column', gap: 3 }}>

@@ -41,6 +41,20 @@ builder.Services.AddIdentityApiEndpoints<User>(opt =>
 .AddRoles<IdentityRole>()
 .AddEntityFrameworkStores<AppDbContext>();
 
+builder.Services.PostConfigure<Microsoft.AspNetCore.Authentication.Cookies.CookieAuthenticationOptions>(
+    Microsoft.AspNetCore.Identity.IdentityConstants.ApplicationScheme, 
+    options =>
+    {
+        // 1. Set SameSite to None for cross-origin requests
+        options.Cookie.SameSite = Microsoft.AspNetCore.Http.SameSiteMode.None;
+        
+        // 2. Set SecurePolicy to Always (required when SameSite is None)
+        options.Cookie.SecurePolicy = Microsoft.AspNetCore.Http.CookieSecurePolicy.Always;
+        
+        // 3. Optional: Ensure the cookie is marked as essential
+        options.Cookie.IsEssential = true; 
+    });
+
 var app = builder.Build();
 
 app.UseMiddleware<ExceptionMiddleware>();
